@@ -3,16 +3,20 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+
+use App\Notifications\CustomResetPasswordNotification;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
+use Tymon\JWTAuth\Contracts\JWTSubject;
+use Illuminate\Contracts\Auth\CanResetPassword;
+use Illuminate\Auth\Passwords\CanResetPassword as CanResetPasswordTrait;
 
-class User extends Authenticatable
+class User extends Authenticatable implements JWTSubject, CanResetPassword
 {
     // use HasApiTokens, HasFactory, Notifiable;
-    use HasRoles, Notifiable;
+    use HasRoles, Notifiable, CanResetPasswordTrait;
 
     /**
      * The attributes that are mass assignable.
@@ -21,7 +25,10 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name',
+        'lastname',
         'email',
+        'phone',
+        'photo',
         'password',
     ];
 
@@ -58,5 +65,24 @@ class User extends Authenticatable
     public function getJWTCustomClaims()
     {
         return [];
+    }
+
+    public function sendPasswordResetNotification($token)
+    {
+        $this->notify(new CustomResetPasswordNotification($token));
+    }
+
+    public function business()
+    {
+        return $this->hasMany(Business::class);
+    }
+
+    public function likes(): BelongsToMany
+    {
+        // En el controlador poner
+        // $user->likes()->syncWithoutDetaching([$negocio->id]); para dar like
+        // o
+        // $user->likes()->detach($negocio->id); quitar el like
+        return $this->belongsToMany(Business::class, 'likes')->withTimestamps();
     }
 }

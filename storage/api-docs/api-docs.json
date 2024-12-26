@@ -1,0 +1,482 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "API Test",
+        "description": "API CuBisne - La aplicación para todos los negocios cubanos",
+        "contact": {
+            "email": "lanlion000128@gmail.com"
+        },
+        "license": {
+            "name": "Apache 2.0",
+            "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+        },
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/api/auth/login": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Loguear el usuario",
+                "description": "Loguear el usuario",
+                "operationId": "login",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "schema": "Request",
+                                "required": [
+                                    "email",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "title": "Usuario",
+                                        "type": "string",
+                                        "example": "admin@admin.com"
+                                    },
+                                    "password": {
+                                        "title": "Contraseña",
+                                        "type": "string",
+                                        "example": "admin"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "User logged",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/auth/me": {
+            "get": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Mostrar Datos del Usuario",
+                "description": "Mostrar Datos del Usuario logueado",
+                "operationId": "authMe",
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unahutorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/auth/profile": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Editar perfil",
+                "description": "Editar perfil",
+                "operationId": "profile",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "schema": "Request",
+                                "required": [
+                                    "name",
+                                    "lastname",
+                                    "email"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "title": "Nombre",
+                                        "type": "string",
+                                        "example": "Luis"
+                                    },
+                                    "lastname": {
+                                        "title": "Apellidos",
+                                        "type": "string",
+                                        "example": "Pérez"
+                                    },
+                                    "phone": {
+                                        "title": "Celular",
+                                        "type": "string",
+                                        "example": "55667788"
+                                    },
+                                    "email": {
+                                        "title": "Correo",
+                                        "type": "string",
+                                        "example": "admin@admin.com"
+                                    },
+                                    "password": {
+                                        "title": "Contraseña",
+                                        "type": "string",
+                                        "example": "admin"
+                                    },
+                                    "photo": {
+                                        "title": "Imagen",
+                                        "type": "string",
+                                        "format": "binary"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Profile Edited",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/auth/register": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Registrar usuario",
+                "description": "Registrar usuario",
+                "operationId": "register",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "schema": "Request",
+                                "required": [
+                                    "name",
+                                    "lastname",
+                                    "email",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "title": "Nombre",
+                                        "type": "string",
+                                        "example": "Luis"
+                                    },
+                                    "lastname": {
+                                        "title": "Apellidos",
+                                        "type": "string",
+                                        "example": "Pérez"
+                                    },
+                                    "email": {
+                                        "title": "Correo",
+                                        "type": "string",
+                                        "example": "admin@admin.com"
+                                    },
+                                    "phone": {
+                                        "title": "Celular",
+                                        "type": "string",
+                                        "example": "66773388"
+                                    },
+                                    "password": {
+                                        "title": "Contraseña",
+                                        "type": "string",
+                                        "example": "Contraseña"
+                                    },
+                                    "password_confirmation": {
+                                        "title": "Confirmar Contraseña",
+                                        "type": "string",
+                                        "example": "Contraseña"
+                                    },
+                                    "photo": {
+                                        "title": "Imagen",
+                                        "type": "string",
+                                        "format": "binary"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Usuario Registrado",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/auth/logout": {
+            "get": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Desloguear al usuario",
+                "description": "Desloguear al usuario",
+                "operationId": "logout",
+                "responses": {
+                    "200": {
+                        "description": "Logout",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/auth/refresh": {
+            "get": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Refrescar Access Token",
+                "description": "Refrescar Access Token",
+                "operationId": "refresh",
+                "responses": {
+                    "200": {
+                        "description": "Refresh Token",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/auth/password/email": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Enviar link recupere contraseña",
+                "description": "Enviar link recupere contraseña",
+                "operationId": "sendResetLinkEmail",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "schema": "Request",
+                                "required": [
+                                    "email"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "title": "Correo",
+                                        "type": "string",
+                                        "example": "admin@admin.com"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Link enviado",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/auth/password/reset": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Recuperar Contraseña",
+                "description": "Recuperar Contraseña",
+                "operationId": "resetPasword",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "schema": "Request",
+                                "required": [
+                                    "email",
+                                    "token",
+                                    "password",
+                                    "password_confirmation"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "title": "Correo",
+                                        "type": "string",
+                                        "example": "admin@admin.com"
+                                    },
+                                    "token": {
+                                        "title": "Token",
+                                        "type": "string",
+                                        "example": "dfsdgsfewr"
+                                    },
+                                    "password": {
+                                        "title": "Contraseña",
+                                        "type": "string",
+                                        "example": "123456"
+                                    },
+                                    "password_confirmation": {
+                                        "title": "Confirmar Contraseña",
+                                        "type": "string",
+                                        "example": "123456"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Contraseña Restablecida",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "scheme": "bearer"
+            }
+        }
+    }
+}

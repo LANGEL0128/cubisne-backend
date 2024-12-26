@@ -8,4 +8,12 @@ use Illuminate\Database\Eloquent\Model;
 class Packagepromotion extends Model
 {
     use HasFactory;
+
+    protected $fillable = [
+        'title',
+        'price',
+        'currency',
+        'days',
+    ];
+
 }

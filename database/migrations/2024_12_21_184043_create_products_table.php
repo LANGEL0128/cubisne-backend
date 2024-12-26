@@ -13,9 +13,10 @@ return new class extends Migration
     {
         Schema::create('products', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('business_id')->constrained('businesses')->onDelete('cascade');
             $table->string('name');
             $table->float('price')->nullable();
-            $table->string('currency', 5)->default('CUP'); 
+            $table->string('currency', 5)->default('CUP');
             $table->text('description')->nullable();
             $table->integer('stock')->nullable();
             $table->enum('unit', ['U', 'Lit', 'Lib', 'Kg'])->default('U');

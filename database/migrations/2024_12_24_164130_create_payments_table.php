@@ -11,12 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('searches', function (Blueprint $table) {
+        Schema::create('payments', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
-            $table->string('search');
-            $table->enum('type', ['all', 'business', 'product', 'service'])->default('all');
-            $table->json('result')->nullable();
+            $table->string('ticket')->unique();
+            $table->text('description')->nullable();
+            $table->integer('money')->default(0);
+            $table->string('currency', 5)->default('CUP');
+            $table->enum('status', ['pendiente', 'pagado'])->default('pendiente');
             $table->timestamps();
         });
     }
@@ -26,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('searches');
+        Schema::dropIfExists('payments');
     }
 };

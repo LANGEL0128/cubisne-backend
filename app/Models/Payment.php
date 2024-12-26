@@ -5,21 +5,22 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Service extends Model
+class Payment extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'business_id',
-        'name',
-        'price',
-        'currency',
+        'user_id',
+        'ticket',
+        'money',
         'description',
-        'duration',
+        'currency',
+        'status',
     ];
 
-    public function business()
+    public function user()
     {
-        return $this->belongsTo(Business::class);
+        return $this->belongsTo(User::class);
     }
+
 }

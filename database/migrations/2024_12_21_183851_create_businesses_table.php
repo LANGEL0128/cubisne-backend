@@ -17,14 +17,18 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->string('name');
             $table->string('site_web')->nullable();
-            $table->date('date_promotion_end')->nullable();
             $table->string('email_contact')->nullable();
             $table->string('phone_contact')->nullable();
             $table->string('slogan')->nullable();
-            $table->string('address')->nullable();
-            $table->string('description')->nullable();
+            $table->string('slug')->nullable();
+            $table->text('address')->nullable();
+            $table->text('description')->nullable();
             $table->string('latitude')->nullable();
             $table->string('longitude')->nullable();
+
+            $table->integer('priority')->default(0);
+            $table->boolean('is_promotionated')->default(false);
+            $table->date('date_promotion_end')->nullable();
             $table->timestamps();
         });
     }

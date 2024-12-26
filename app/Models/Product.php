@@ -8,4 +8,18 @@ use Illuminate\Database\Eloquent\Model;
 class Product extends Model
 {
     use HasFactory;
+
+    protected $fillable = [
+        'name',
+        'price',
+        'currency',
+        'description',
+        'stock',
+        'unit',
+    ];
+
+    public function business()
+    {
+        return $this->belongsTo(Business::class);
+    }
 }

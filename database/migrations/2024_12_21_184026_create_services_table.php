@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('services', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('business_id')->constrained('businesses')->onDelete('cascade');
             $table->string('name');
             $table->float('price')->nullable();
             $table->string('currency', 5)->default('CUP');

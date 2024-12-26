@@ -15,8 +15,10 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->float('price');
+            $table->text('description')->nullable();
             $table->string('currency', 5)->default('CUP');
             $table->integer('days')->default(30);
+            $table->integer('priority')->default(1);
             $table->timestamps();
         });
     }

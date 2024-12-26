@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,6 +14,17 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+Route::get('/clear', function() {
+    // Storage::deleteDirectory('public');
+    // Storage::makeDirectory('public');
+    Artisan::call('route:clear');
+    Artisan::call('storage:link', []);
+});
+
+Route::get('/', function() {
+    return redirect('api/documentation');
+});
+
+Route::get('not-authorized', function() {
+    return response('', 401);
 });
