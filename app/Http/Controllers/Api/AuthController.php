@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Validator;
 use Tymon\JWTAuth\Facades\JWTAuth;
@@ -66,12 +67,17 @@ class AuthController extends Controller
         ) {
             return $this->sendError('Credenciales Inválidas', [], 401);
         }
-
+        $user = User::with([
+            'business',
+            'business.services',
+            'business.products',
+            'roles',
+        ])->where('id', auth()->user()->id)->firstOrFail();
         return $this->sendResponse([
             'access_token' => $token,
             'token_type' => 'bearer',
             'expires_in' => auth()->factory()->getTTL() * 60,
-            'user' => auth()->user()
+            'user' => $user
         ], 'User Logged');
     }
 
@@ -93,6 +99,7 @@ class AuthController extends Controller
             'business',
             'business.services',
             'business.products',
+            'roles',
         ])->where('id', auth()->user()->id)->firstOrFail();
         return $this->sendResponse(['user' => $user], 'User Logged');
     }
@@ -132,11 +139,13 @@ class AuthController extends Controller
             'name' => 'required',
             'lastname' => 'required',
             'email' => 'required|unique:users,email,'.$user->id,
+            'phone' => 'unique:users,phone,'.$user->id,
         ], [
             'name.required' => 'El nombre es requerido',
             'lastname.required' => 'El apellido es requerido',
             'email.required' => 'El correo es requerido',
             'email.unique' => 'El correo ya existe en la base de datos',
+            'phone.unique' => 'El celular ya existe en la base de datos',
         ]);
         if($validatedData->fails()) {
             return $this->sendError($validatedData->errors()->first(), [], 400);
@@ -152,6 +161,12 @@ class AuthController extends Controller
             $params['photo'] = request()->file('photo')->store('uploads/users', 'public');
         }
         $user->update($params);
+        $user = User::with([
+            'business',
+            'business.services',
+            'business.products',
+            'roles',
+        ])->where('id', auth()->user()->id)->firstOrFail();
         return $this->sendResponse(['user' => $user], 'El perfil fue actualizado satisfactoriamente');
     }
 
@@ -190,6 +205,7 @@ class AuthController extends Controller
             'name' => 'required',
             'lastname' => 'required',
             'email' => 'required|email|unique:users',
+            'phone' => 'unique:users',
             'password' => 'required|min:6|confirmed',
         ], [
             'name.required' => 'El nombre es requerido',
@@ -197,6 +213,7 @@ class AuthController extends Controller
             'email.required' => 'El correo es requerido',
             'email.email' => 'Debe ser un correo válido',
             'email.unique' => 'El correo ya existe en la base de datos',
+            'phone.unique' => 'El celular ya existe en la base de datos',
             'password.required' => 'La contraseña es requerida',
             'password.min' => 'La contraseña debe ser mínimo de 6 caracteres',
             'password.confirmed' => 'La contraseña no se ha confirmado correctamente',
@@ -205,17 +222,25 @@ class AuthController extends Controller
         if($validatedData->fails()) {
             return $this->sendError($validatedData->errors()->first(), [], 400);
         }
-
-        $user = User::create(request()->post());
+        Log::debug(request()->post());
+        $params = request()->post();
+        $params['password'] = Hash::make($params['password']);
+        $user = User::create($params);
         $user->assignRole('cliente');
         Auth::login($user);
         $token = JWTAuth::fromUser($user);
+        $user = User::with([
+            'business',
+            'business.services',
+            'business.products',
+            'roles',
+        ])->where('id', auth()->user()->id)->firstOrFail();
 
         return $this->sendResponse([
             'access_token' => $token,
             'token_type' => 'bearer',
             'expires_in' => auth()->factory()->getTTL() * 60,
-            'user' => auth()->user()
+            'user' => $user
         ], 'User Logged');
     }
 
@@ -251,11 +276,17 @@ class AuthController extends Controller
     */
     public function refresh()
     {
+        $user = User::with([
+            'business',
+            'business.services',
+            'business.products',
+            'roles',
+        ])->where('id', auth()->user()->id)->firstOrFail();
         return $this->sendResponse([
             'access_token' => auth()->refresh(),
             'token_type' => 'bearer',
             'expires_in' => auth()->factory()->getTTL() * 60,
-            'user' => auth()->user()
+            'user' => $user
         ], 'Token Refresh');
     }
 
